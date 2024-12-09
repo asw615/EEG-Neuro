@@ -1,0 +1,126 @@
+---
+title: "Neuro_Exam"
+author: "Marie V. Thomsen"
+date: "2024-05-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Load libraries
+library(tidyverse)
+library(ggplot2)
+```
+
+
+```{r}
+# Load multiple logfiles into R
+data <- read.csv('logfiles/ah1_experiment_data.csv')
+data1 <- read.csv('logfiles/ah2_experiment_data.csv')
+data2 <- read.csv('logfiles/ah3_experiment_data.csv')
+data3 <- read.csv('logfiles/ah4_experiment_data.csv')
+data4 <- read.csv('logfiles/ah5_experiment_data.csv')
+
+# Merge data
+data <- rbind(data, data1, data2, data3, data4)
+```
+
+```{r}
+# Boxplot of reaction time and filter out outliers
+data %>%
+  filter(Reaction.Time < 5) %>%
+ggplot(aes(x=Condition, y=Reaction.Time)) +
+  geom_boxplot() +
+  labs(title = "Reaction time in different conditions",
+       x = "Condition",
+       y = "Reaction time (ms)")
+```
+
+```{r}
+# Add new column with congruent conditions (m_m and f_f)
+data <- data %>% 
+  mutate(cond = case_when(
+    Condition %in% c("m_m", "f_f") ~ "congruent",
+    Condition %in% c("m_f", "f_m") ~ "incongruent",
+    Condition %in% c("n_m", "n_f") ~ "neutral",
+    Condition %in% c("f_nw", "m_nw", "n_nw") ~ "non-word"
+  ))
+```
+
+```{r}
+# Boxplot with congruent and incongruent and neutral conditions
+data %>%
+  filter(Reaction.Time < 5) %>%
+  filter(cond %in% c("congruent", "incongruent", "neutral")) %>% 
+  ggplot(aes(x=cond, y=Reaction.Time)) +
+  geom_boxplot(fill=c("#2A9D8F", "#E76F51", "#E9C46A")) +
+  stat_summary(fun.y=mean, geom="point", shape=20, size=4, color="black") +
+  labs(title = "Reaction Time Across Conditions",
+       x = "Condition",
+       y = "Reaction Time (ms)") +
+  theme_minimal()
+```
+
+```{r}
+# t-test for paired samples
+filtered <- data %>%
+  filter(Reaction.Time < 5) %>%
+  filter(cond %in% c("congruent", "incongruent"))
+
+filtered$cond <- as.factor(filtered$cond)
+
+t.test(Reaction.Time ~ cond, data = filtered)
+```
+
+
+```{r}
+counts <- filtered %>%
+  group_by(Participant.ID, cond) %>%
+  summarise(n = n(), .groups = 'drop')
+
+min_counts <- counts %>%
+  group_by(Participant.ID) %>%
+  summarise(min_count = min(n), .groups = 'drop')
+
+balanced_data <- filtered %>%
+  left_join(min_counts, by = "Participant.ID") %>%
+  group_by(Participant.ID, cond) %>%
+  sample_n(min(min_count)) %>%
+  ungroup()
+```
+
+```{r}
+# Assuming you have a data frame `data` with columns `participant_id`, `condition`, and `reaction_time`
+
+# Calculate differences
+data_diff <- balanced_data[balanced_data$cond == 'congruent', 'Reaction.Time'] - balanced_data[balanced_data$cond == 'incongruent', 'Reaction.Time']
+
+data_diff$Reaction.Time <- as.numeric(data_diff)
+
+# Check normality
+shapiro.test(data_diff)  # Shapiro-Wilk test for normality
+
+# Plot histogram and Q-Q plot
+hist(balanced_data$Reaction.Time, main='Histogram of Differences', xlab='Difference in Reaction Time')
+qqnorm(balanced_data$Reaction.Time)
+qqline(balanced_data$Reaction.Time)
+```
+
+
+```{r}
+t.test(Reaction.Time ~ cond, data = balanced_data, paired = TRUE)
+```
+
+```{r}
+# Count the occurrences of each level in the factor column
+counts <- table(balanced_data$cond)
+
+# Extract the counts for "congruent" and "incongruent"
+count_congruent <- counts["congruent"]
+count_incongruent <- counts["incongruent"]
+
+```
+

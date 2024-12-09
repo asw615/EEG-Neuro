@@ -1,6 +1,13 @@
 # Stereotypes in the Brain: An EEG Study
 
-Welcome to the repository for **"Stereotypes, It Is All in Your Head - An EEG Study Investigating Gender Stereotypes in the Brain Through a Lexical Decision Task"**. This repository includes code, data, and supporting materials related to the study conducted by Søren Søndergaard Meiner and Marie Vestergaard Thomsen at Aarhus University.
+**Authors**:  
+- Søren Søndergaard Meiner (SM)
+- Laura Sørine Voldgaard (LV)
+
+**Institution**:  
+School of Communication and Culture, Aarhus University  
+
+---
 
 ## Project Overview
 

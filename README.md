@@ -9,6 +9,10 @@ School of Communication and Culture, Aarhus University
 
 ---
 
+## **Data is not included in this repo because the files are too large**
+
+---
+
 ## Project Overview
 
 This research explores the neurological basis of gender stereotypes using **Electroencephalography (EEG)** in a **Lexical Decision Task (LDT)**. It examines the event-related potentials (ERPs) **N400** and **P600**, which are linked to semantic and syntactic processing, respectively. The aim was to assess whether incongruent gender-stereotyped word pairs elicit measurable neural responses.

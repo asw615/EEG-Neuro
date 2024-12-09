@@ -8,9 +8,7 @@
 School of Communication and Culture, Aarhus University  
 
 ---
-
 ## **Data is not included in this repo because the files are too large**
-
 ---
 
 ## Project Overview

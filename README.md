@@ -2,7 +2,7 @@
 
 **Authors**:  
 - Søren Søndergaard Meiner (SM)
-- Laura Sørine Voldgaard (LV)
+- Marie Vestergaard Thomsen (MVT)
 
 **Institution**:  
 School of Communication and Culture, Aarhus University  
